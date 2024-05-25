@@ -1,4 +1,4 @@
-package pkg;
+package model;
 
 import javax.sql.*;
 import java.sql.*;
