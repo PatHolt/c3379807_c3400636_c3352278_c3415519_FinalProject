@@ -222,3 +222,69 @@ CREATE VIEW VW_Knowledge_Base AS (
 		   --     ON KBAR.user_id = UDTL.user_id
 );
 GO
+
+-- Inserting Users
+INSERT INTO [User] (username, password, first_name, last_name, email, contact_number, role_id) VALUES
+('user1', 'password1', 'John', 'Doe', 'john.doe@example.com', '1234567890', 1), -- User
+('user2', 'password2', 'Jane', 'Smith', 'jane.smith@example.com', '0987654321', 2), -- IT Staff
+('user3', 'password3', 'Jim', 'Beam', 'jim.beam@example.com', '1122334455', 3), -- IT Manager
+('user4', 'password4', 'Alice', 'Johnson', 'alice.johnson@example.com', '2233445566', 1); -- User
+GO
+
+-- Inserting Issues
+INSERT INTO Issue (title, description, resolution_details, category_id, state_id, reported_by_id, assigned_to_id, date_reported, date_resolved) VALUES
+('Network Issue', 'Cannot connect to the internet', NULL, 1, 1, 1, NULL, '2024-05-25', NULL), -- New issue reported by user1
+('Software Bug', 'Application crashes on login', NULL, 2, 1, 4, NULL, '2024-05-26', NULL), -- New issue reported by user4
+('Hardware Failure', 'Laptop not turning on', NULL, 3, 1, 1, NULL, '2024-05-27', NULL); -- New issue reported by user1
+GO
+
+-- Assigning Issues and Updating States
+UPDATE Issue SET state_id = 2, assigned_to_id = 2 WHERE issue_id = 1; -- IT Staff starts working on Network Issue
+UPDATE Issue SET state_id = 3, assigned_to_id = 2 WHERE issue_id = 2; -- IT Staff starts working on Software Bug, waiting on third party
+UPDATE Issue SET state_id = 2, assigned_to_id = 2 WHERE issue_id = 3; -- IT Staff starts working on Hardware Failure
+GO
+
+-- Inserting Keywords
+INSERT INTO Keyword (keyword_name) VALUES
+('Network'), ('Bug'), ('Hardware'), ('Login'), ('Battery');
+GO
+
+-- Inserting Issue_Keywords
+INSERT INTO Issue_Keyword (issue_id, keyword_id) VALUES
+(1, 1), -- Network Issue
+(2, 2), -- Software Bug
+(2, 4), -- Login related issue
+(3, 3), -- Hardware Failure
+(3, 5); -- Battery related issue
+GO
+
+-- Inserting Comments
+INSERT INTO Comment (issue_id, user_id, comment_text) VALUES
+(1, 1, 'Issue reported, awaiting response.'), -- Comment by user1 on Network Issue
+(1, 2, 'Investigating the issue.'),
+(2, 4, 'Issue reported, awaiting response.'), 
+(2, 2, 'Contacting third-party vendor for a fix.'), 
+(3, 1, 'Issue reported, awaiting response.'),
+(3, 2, 'Testing hardware components.'), 
+(3, 3, 'Battery replaced and issue resolved.'); 
+GO
+
+-- Updating Issue States
+UPDATE Issue SET state_id = 5, date_resolved = '2024-05-28' WHERE issue_id = 3; -- Hardware Failure marked as Completed
+UPDATE Issue SET state_id = 6 WHERE issue_id = 3; -- Hardware Failure marked as Not Accepted by user
+UPDATE Issue SET state_id = 2 WHERE issue_id = 3; -- Hardware Failure back to In Progress
+GO
+
+-- Inserting Knowledge Base Articles
+INSERT INTO Knowledge_Base (issue_id, title, description, resolution_details, date_resolved) VALUES
+(1, 'Network Connectivity Issue', 'Guide to troubleshoot network connectivity issues.', 'Restarted router and issue was resolved', '2024-05-26'), -- Based on Network Issue
+(2, 'Application Login Bug', 'Steps to resolve application crash on login.', 'Bug fixed in latest update', '2024-05-27'), -- Based on Software Bug
+(3, 'Laptop Battery Replacement', 'Instructions to replace laptop battery.', 'Replaced battery', '2024-05-28'); -- Based on Hardware Failure
+GO
+
+-- Inserting Files
+INSERT INTO [File] (issue_id, file_name, file_path) VALUES
+(1, 'network_issue_screenshot.png', '/files/network_issue_screenshot.png'), -- File related to Network Issue
+(2, 'software_bug_log.txt', '/files/software_bug_log.txt'), -- File related to Software Bug
+(3, 'hardware_failure_photo.jpg', '/files/hardware_failure_photo.jpg'); -- File related to Hardware Failure
+GO
