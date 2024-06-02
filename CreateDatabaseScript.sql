@@ -4,6 +4,7 @@
 
 Date      Name  Description
 25/05/24  PH    Add new views. Add GO 
+2/06/2024 NW    Added Demo Data. 
 */
 
 
@@ -234,8 +235,8 @@ GO
 -- Inserting Issues
 INSERT INTO Issue (title, description, resolution_details, category_id, state_id, reported_by_id, assigned_to_id, date_reported, date_resolved) VALUES
 ('Network Issue', 'Cannot connect to the internet', NULL, 1, 1, 1, NULL, '2024-05-25', NULL), -- New issue reported by user1
-('Software Bug', 'Application crashes on login', NULL, 2, 1, 4, NULL, '2024-05-26', NULL), -- New issue reported by user4
-('Hardware Failure', 'Laptop not turning on', NULL, 3, 1, 1, NULL, '2024-05-27', NULL); -- New issue reported by user1
+('Software Bug', 'Application crashes on login', NULL, 2, 1, 4, NULL, '2024-05-26', NULL), 
+('Hardware Failure', 'Laptop not turning on', NULL, 3, 1, 1, NULL, '2024-05-27', NULL); 
 GO
 
 -- Assigning Issues and Updating States
