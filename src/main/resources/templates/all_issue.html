@@ -30,13 +30,10 @@
             <div class="main-title">
                 IT SERVICE PORTAL
             </div>
-            <div class="subtitle">
-                Manager Dashboard
-            </div>
         </div>
         <div class="navigation-panel">
-            <a href="/manager-dashboard" class="nav-link active">Home</a>
-            <a href="/view-statistic" class="nav-link">View Statistics</a>
+            <a href="/staff-dashboard" class="nav-link">Home</a>
+            <a href="/all-issues" class="nav-link active">All Issues</a>
             <a href="/knowledge-articles" class="nav-link">Knowledge Articles</a>
         </div>
     </div>
@@ -64,7 +61,7 @@
                             <td class="status" th:text="${issue.status}"></td>
                             <td class="assigned-to">
                                 <span th:if="${issue.assignedTo != null}" th:text="${issue.assignedTo}"></span>
-                                <a th:if="${issue.assignedTo == null}" th:href="@{/issue/{id}(id=${issue.issueId})}">Assign Staff</a>
+                                <a th:if="${issue.assignedTo == null}" th:href="@{/issue/{id}(id=${issue.issueId})}">Assign to Me</a>
                             </td>
                         </tr>
                     </tbody>

@@ -18,7 +18,7 @@
             </div>
         </div>
         <div class="navigation-panel">
-            <a href="/user_dashboard" class="nav-link active">Home</a>
+            <a href="/user-dashboard" class="nav-link active">Home</a>
             <a href="/new-issue" class="nav-link">New Issue</a>
             <a href="/knowledge-articles" class="nav-link">Knowledge Articles</a>
         </div>
@@ -31,39 +31,19 @@
                     <tr>
                         <th>Issue ID</th>
                         <th>Title</th>
-                        <th>Status</th>
                         <th>Category</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Cannot login to the system</td>
-                        <td>Open</td>
-                        <td>Login Issue</td>
+                    <tr th:each="issue : ${issues}">
+                        <td th:text="${issue.issueId}"></td>
+                        <td>
+                            <a th:href="@{/issue/{id}(id=${issue.issueId})}" th:text="${issue.title}"></a>
+                        </td>
+                        <td th:text="${issue.category}"></td>
+                        <td th:text="${issue.status}"></td>
                     </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>System crashes frequently</td>
-                        <td>In Progress</td>
-                        <td>System Issue</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>Unable to reset password</td>
-                        <td>Closed</td>
-                        <td>Password Issue</td>
-                    </tr>
-                    <tbody>
-                        <tr th:each="issue : ${issues}">
-                            <td th:text="${issue.issueId}"></td>
-                            <td>
-                                <a th:href="@{/issue/{id}(id=${issue.issueId})}" th:text="${issue.title}"></a>
-                            </td>
-                            <td th:text="${issue.status}"></td>
-                            <td th:text="${issue.category}"></td>
-                        </tr>
-                    </tbody>
                 </tbody>
             </table>
         </div>
