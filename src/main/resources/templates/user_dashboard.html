@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Dashboard - IT Issue Reporting Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
+    <link href="/css/dashboards.css" rel="stylesheet">
+</head>
+<body>
+    <div class="header-container">
+        <div class="titles-container">
+            <div class="main-title">
+                IT SERVICE PORTAL
+            </div>
+            <div class="subtitle">
+                User Dashboard
+            </div>
+        </div>
+        <div class="navigation-panel">
+            <a href="/user_dashboard" class="nav-link active">Home</a>
+            <a href="/new-issue" class="nav-link">New Issue</a>
+            <a href="/knowledge-articles" class="nav-link">Knowledge Articles</a>
+        </div>
+    </div>
+    <div class="container">
+        <div class="reported-issues">
+            <h3>My Reported Issues</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Issue ID</th>
+                        <th>Title</th>
+                        <th>Status</th>
+                        <th>Category</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Cannot login to the system</td>
+                        <td>Open</td>
+                        <td>Login Issue</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>System crashes frequently</td>
+                        <td>In Progress</td>
+                        <td>System Issue</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Unable to reset password</td>
+                        <td>Closed</td>
+                        <td>Password Issue</td>
+                    </tr>
+                    <tr th:each="issue : ${issues}">
+                        <td th:text="${issue.issueId}"></td>
+                        <td th:text="${issue.title}"></td>
+                        <td th:text="${issue.status}"></td>
+                        <td th:text="${issue.category}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Login - IT Issue Reporting Portal</title>
+    <title>Signup - IT Issue Reporting Portal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <link href="/css/styles.css" rel="stylesheet">
@@ -19,7 +19,7 @@
             background-color: #7D8491; 
             color: white;
         }
-        .login-container {
+        .signup-container {
             max-width: 400px;
             margin: 50px auto;
             padding: 20px;
@@ -28,7 +28,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             background-color: white;
         }
-        .login-header {
+        .signup-header {
             text-align: center;
             margin-bottom: 20px;
         }
@@ -45,25 +45,45 @@
 <body>
     <div class="container">
         <div class="portal-title">
-            Welcome Back to UoN Service Portal
+            UoN Service Portal Welcome
         </div>
-        <div class="login-container">
-            <div class="login-header">
-                <h2>Log In</h2>
+        <div class="signup-container">
+            <div class="signup-header">
+                <h2>Sign Up</h2>
             </div>
-            <form th:action="@{/login}" method="post">
+            <form th:action="@{/signup}" method="post">
+                <div class="mb-3">
+                    <label for="firstname" class="form-label">First Name</label>
+                    <input type="text" class="form-control" id="firstname" name="firstname" required>
+                </div>
+                <div class="mb-3">
+                    <label for="lastname" class="form-label">Last Name</label>
+                    <input type="text" class="form-control" id="lastname" name="lastname" required>
+                </div>
                 <div class="mb-3">
                     <label for="username" class="form-label">Username</label>
                     <input type="text" class="form-control" id="username" name="username" required>
                 </div>
                 <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="contactnumber" class="form-label">Contact Number</label>
+                    <input type="tel" class="form-control" id="contactnumber" name="contactnumber" required>
+                </div>
+                <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
                     <input type="password" class="form-control" id="password" name="password" required>
                 </div>
-                <button type="submit" class="btn btn-custom w-100">Login</button>
+                <div class="mb-3">
+                    <label for="confirmPassword" class="form-label">Confirm Password</label>
+                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                </div>
+                <button type="submit" class="btn btn-custom w-100">Signup</button>
             </form>
             <div class="text-center mt-3">
-                <p>Don't have an account? <a th:href="@{/signup}">Sign Up here</a></p>
+                <p>Already have an account? <a th:href="@{/login}">Log In here</a></p>
             </div>
         </div>
     </div>

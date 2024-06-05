@@ -1,0 +1,13 @@
+/* src/main/resources/static/css/styles.css */
+
+/* styles.css */
+.custom-header {
+    background-color: #f8f9fa;
+    padding: 10px 0;
+    margin-bottom: 20px;
+}
+.custom-footer {
+    background-color: #f8f9fa;
+    padding: 10px 0;
+    margin-top: 20px;
+}
