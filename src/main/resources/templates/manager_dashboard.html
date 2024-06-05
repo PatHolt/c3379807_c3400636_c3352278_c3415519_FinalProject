@@ -38,7 +38,9 @@
                 <tbody>
                     <tr th:each="issue : ${issues}">
                         <td th:text="${issue.issueId}"></td>
-                        <td th:text="${issue.title}"></td>
+                        <td>
+                            <a th:href="@{/issue/{id}(id=${issue.issueId})}" th:text="${issue.title}"></a>
+                        </td>
                         <td th:text="${issue.status}"></td>
                         <td th:text="${issue.category}"></td>
                     </tr>

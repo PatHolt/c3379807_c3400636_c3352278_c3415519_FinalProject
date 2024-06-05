@@ -68,9 +68,19 @@ body {
     font-weight: 600;
 }
 .btn-primary {
-    background-color: #2D3142;
+    background-color: #313638;
+    border-color: #313638;
+}
+
+.btn-primary:hover {
+    background-color: black;
+    border-color: black;
 }
 .btn-info {
     background-color: #0288D1;
     color: white;
+}
+.btn-secondary {
+    background-color: grey;
+    border-color: grey;
 }
