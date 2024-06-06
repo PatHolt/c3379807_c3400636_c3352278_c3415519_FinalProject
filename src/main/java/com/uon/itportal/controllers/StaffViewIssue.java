@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class StaffViewIssue {
 
     @GetMapping("/staff-view-issue")
-    public String login() {
+    public String staffViewIssue() {
         return "staff_view_issue";
     }
 }
