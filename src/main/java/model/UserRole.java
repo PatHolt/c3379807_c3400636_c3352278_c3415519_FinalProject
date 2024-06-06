@@ -52,4 +52,57 @@ public record UserRole
             connection.close();
         }
     }
+
+    /**
+     * Inserts a user role in the database.
+     *
+     * @param _userRole The user role to be inserted.
+     * @throws SQLException if there is an error in executing the SQL query.
+     */
+    public static void insertUserRole(UserRole _userRole) throws SQLException
+    {
+        var connection = ConfigBean.getConnection();
+
+        try
+        {
+            var query = connection.prepareStatement(
+                    """
+                    INSERT INTO [User_Role] (role_name) VALUES (?);
+                    """
+            );
+            query.setString(1, _userRole.role());
+            query.executeUpdate();
+        }
+        finally
+        {
+            connection.close();
+        }
+    }
+
+    /**
+     * Updates a user role in the database.
+     *
+     * @param _userRole The user role to be updated.
+     * @throws SQLException if there is an error in executing the SQL query.
+     */
+    public static void updateUserRole(User _userRole) throws SQLException
+    {
+        var connection = ConfigBean.getConnection();
+
+        try
+        {
+            var query = connection.prepareStatement(
+                    """
+                    UPDATE [User_Role] SET role_name = ? WHERE role_id = ?;
+                    """
+            );
+            query.setString(1, _userRole.role());
+            query.setInt(2, _userRole.roleId());
+            query.executeUpdate();
+        }
+        finally
+        {
+            connection.close();
+        }
+    }
 }

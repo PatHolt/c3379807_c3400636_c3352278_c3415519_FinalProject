@@ -69,4 +69,63 @@ public record Comment
             connection.close();
         }
     }
+
+    /**
+     * Inserts a comment in the database.
+     *
+     * @param _comment The comment to be inserted.
+     * @throws SQLException if there is an error in executing the SQL query.
+     */
+    public static void insertComment(Comment _comment) throws SQLException
+    {
+        var connection = ConfigBean.getConnection();
+
+        try
+        {
+            var query = connection.prepareStatement(
+                    """
+                    INSERT INTO [Comment] (issue_id, user_id, comment_text, comment_date) VALUES (?,?,?,?);
+                    """
+            );
+            query.setInt(1, _comment.issueId());
+            query.setInt(2, _comment.userId());
+            query.setString(3, _comment.commentText());
+            query.setDate(4, (java.sql.Date) _comment.commentDate());
+            query.executeUpdate();
+        }
+        finally
+        {
+            connection.close();
+        }
+    }
+
+    /**
+     * Updates a comment in the database.
+     *
+     * @param _comment The comment to be updated.
+     * @throws SQLException if there is an error in executing the SQL query.
+     */
+    public static void updateComment(Comment _comment) throws SQLException
+    {
+        var connection = ConfigBean.getConnection();
+
+        try
+        {
+            var query = connection.prepareStatement(
+                    """
+                    UPDATE [Comment] SET issue_id = ?, user_id = ?, comment_text = ?, comment_date = ? WHERE comment_id = ?;
+                    """
+            );
+            query.setInt(1, _comment.issueId());
+            query.setInt(2, _comment.userId());
+            query.setString(3, _comment.commentText());
+            query.setDate(4, (java.sql.Date) _comment.commentDate());
+            query.setInt(5, _comment.commentId());
+            query.executeUpdate();
+        }
+        finally
+        {
+            connection.close();
+        }
+    }
 }
