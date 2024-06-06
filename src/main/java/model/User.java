@@ -126,7 +126,7 @@ public record User
      * @return A user object in the database.
      * @throws SQLException if there is an error in executing the SQL query.
      */
-    public static User getUserByUsername(int _username) throws SQLException
+    public static User getUserByUsername(String _username) throws SQLException
     {
         var connection = ConfigBean.getConnection();
 
@@ -139,7 +139,7 @@ public record User
                     WHERE username = ?;
                     """
             );
-            query.setInt(1, _username);
+            query.setString(1, _username);
 
             var resultSet = query.executeQuery();
 
@@ -161,6 +161,71 @@ public record User
 
             return null;
 
+        }
+        finally
+        {
+            connection.close();
+        }
+    }
+
+    /**
+     * Inserts a user in the database.
+     *
+     * @param _user The user to be inserted.
+     * @throws SQLException if there is an error in executing the SQL query.
+     */
+    public static void insertUser(User _user) throws SQLException
+    {
+        var connection = ConfigBean.getConnection();
+
+        try
+        {
+            var query = connection.prepareStatement(
+                    """
+                    INSERT INTO [User] (username, password, first_name, last_name, email, contact_number, role_id) VALUES (?,?,?,?,?,?,?);
+                    """
+            );
+            query.setString(1, _user.username());
+            query.setString(2, _user.password());
+            query.setString(3, _user.firstName());
+            query.setString(4, _user.lastName());
+            query.setString(5, _user.email());
+            query.setInt(6, _user.contactNumber());
+            query.setInt(7, _user.roleId());
+            query.executeUpdate();
+        }
+        finally
+        {
+            connection.close();
+        }
+    }
+
+    /**
+     * Updates a user in the database.
+     *
+     * @param _user The user to be updated.
+     * @throws SQLException if there is an error in executing the SQL query.
+     */
+    public static void updateUser(User _user) throws SQLException
+    {
+        var connection = ConfigBean.getConnection();
+
+        try
+        {
+            var query = connection.prepareStatement(
+                    """
+                    UPDATE [User] SET username = ?, password = ?, first_name = ?, last_name = ?, email = ?, contact_number = ?, role_id = ? WHERE user_id = ?;
+                    """
+            );
+            query.setString(1, _user.username());
+            query.setString(2, _user.password());
+            query.setString(3, _user.firstName());
+            query.setString(4, _user.lastName());
+            query.setString(5, _user.email());
+            query.setInt(6, _user.contactNumber());
+            query.setInt(7, _user.roleId());
+            query.setInt(8, _user.userId());
+            query.executeUpdate();
         }
         finally
         {

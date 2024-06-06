@@ -297,4 +297,74 @@ public record Issue
             connection.close();
         }
     }
+
+    /**
+     * Inserts an issue in the database.
+     *
+     * @param _issue The issue to be inserted.
+     * @throws SQLException if there is an error in executing the SQL query.
+     */
+    public static void insertIssue(Issue _issue) throws SQLException
+    {
+        var connection = ConfigBean.getConnection();
+
+        try
+        {
+            var query = connection.prepareStatement(
+                    """
+                    INSERT INTO [Issue] (title, description, resolution_details, category_id, state_id, date_reported, date_resolved, reported_by_id, assigned_to_id) VALUES (?,?,?,?,?,?,?,?,?);
+                    """
+            );
+            query.setString(1, _issue.title());
+            query.setString(2, _issue.description());
+            query.setString(3, _issue.resolutionDetails());
+            query.setInt(4, _issue.categoryId());
+            query.setInt(5, _issue.stateId());
+            query.setDate(6, (java.sql.Date) _issue.dateReported());
+            query.setDate(7, (java.sql.Date) _issue.dateResolved());
+            query.setInt(8, _issue.reportedById());
+            query.setInt(9, _issue.assignedToId());
+            query.executeUpdate();
+        }
+        finally
+        {
+            connection.close();
+        }
+    }
+
+    /**
+     * Updates an issue in the database.
+     *
+     * @param _issue The issue to be updated.
+     * @throws SQLException if there is an error in executing the SQL query.
+     */
+    public static void updateIssue(Issue _issue) throws SQLException
+    {
+        var connection = ConfigBean.getConnection();
+
+        try
+        {
+            var query = connection.prepareStatement(
+                    """
+                    UPDATE [Issue] SET title = ?, description = ?, resolution_details = ?, category_id = ?, state_id = ?, date_reported = ?, date_resolved = ?, reported_by_id = ?, assigned_to_id = ? WHERE issue_id = ?;
+                    """
+            );
+
+            query.setString(1, _issue.title());
+            query.setString(2, _issue.description());
+            query.setString(3, _issue.resolutionDetails());
+            query.setInt(4, _issue.categoryId());
+            query.setInt(5, _issue.stateId());
+            query.setDate(6, (java.sql.Date) _issue.dateReported());
+            query.setDate(7, (java.sql.Date) _issue.dateResolved());
+            query.setInt(8, _issue.reportedById());
+            query.setInt(9, _issue.assignedToId());
+            query.setInt(9, _issue.issueId());
+            query.executeUpdate();
+        }
+        finally
+        {
+            connection.close();
+        }
+    }
 }

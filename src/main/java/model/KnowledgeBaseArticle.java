@@ -113,4 +113,65 @@ public record KnowledgeBaseArticle
             connection.close();
         }
     }
+
+    /**
+     * Inserts a knowledge-base article in the database.
+     *
+     * @param _article The knowledge-base article to be inserted.
+     * @throws SQLException if there is an error in executing the SQL query.
+     */
+    public static void insertKnowledgeBaseArticle(KnowledgeBaseArticle _article) throws SQLException
+    {
+        var connection = ConfigBean.getConnection();
+
+        try
+        {
+            var query = connection.prepareStatement(
+                    """
+                    INSERT INTO [Knowledge_Base] (issue_id, title, description, resolution_details, date_resolved) VALUES (?,?,?,?,?);
+                    """
+            );
+            query.setInt(1, _article.issueId());
+            query.setString(2, _article.articleTitle());
+            query.setString(3, _article.articleDescription());
+            query.setString(4, _article.resolutionDetails());
+            query.setDate(5, (java.sql.Date) _article.dateResolved());
+            query.executeUpdate();
+        }
+        finally
+        {
+            connection.close();
+        }
+    }
+
+    /**
+     * Updates a knowledge-base article in the database.
+     *
+     * @param _article The knowledge-base article to be updated.
+     * @throws SQLException if there is an error in executing the SQL query.
+     */
+    public static void updateKnowledgeBaseArticle(KnowledgeBaseArticle _article) throws SQLException
+    {
+        var connection = ConfigBean.getConnection();
+
+        try
+        {
+            var query = connection.prepareStatement(
+                    """
+                    UPDATE [Knowledge_Base] SET issue_id = ?, title = ?, description = ?, resolution_details = ?, date_resolved = ? where kb_id = ?;
+                    """
+            );
+            query.setInt(1, _article.issueId());
+            query.setString(2, _article.articleTitle());
+            query.setString(3, _article.articleDescription());
+            query.setString(4, _article.resolutionDetails());
+            query.setDate(5, (java.sql.Date) _article.dateResolved());
+            query.setInt(6, _article.knowledgeBaseId());
+            query.executeUpdate();
+        }
+        finally
+        {
+            connection.close();
+        }
+    }
 }
