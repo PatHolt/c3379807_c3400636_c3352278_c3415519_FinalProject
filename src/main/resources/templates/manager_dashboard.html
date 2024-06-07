@@ -11,16 +11,22 @@
             text-align: center;
         }
         .table th.title, .table td.title {
-            width: 30%;
-        }
-        .table th.category, .table td.category {
             width: 20%;
         }
-        .table th.status, .table td.status {
+        .table th.category, .table td.category {
             width: 15%;
         }
+        .table th.status, .table td.status {
+            width: 10%;
+        }
         .table th.assigned-to, .table td.assigned-to {
-            width: 25%;
+            width: 20%;
+        }
+        .table th.resolved-date, .table td.resolved-date {
+            width: 10%;
+        }
+        .table th.resolving-time, .table td.resolving-time {
+            width: 15%;
         }
     </style>
 </head>
@@ -40,35 +46,45 @@
             <a href="/knowledge-articles" class="nav-link">Knowledge Articles</a>
         </div>
     </div>
-    <div class="container">
-        <div class="card mt-4">
-            <div class="card-body p-4">
-                <h3>All Reported Issues</h3>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th class="issue-id">Issue ID</th>
-                            <th class="title">Title</th>
-                            <th class="category">Category</th>
-                            <th class="status">Status</th>
-                            <th class="assigned-to">Assigned To</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="issue : ${issues}">
-                            <td th:text="${issue.issueId}"></td>
-                            <td class="title">
-                                <a th:href="@{/issue/{id}(id=${issue.issueId})}" th:text="${issue.title}"></a>
-                            </td>
-                            <td class="category" th:text="${issue.category}"></td>
-                            <td class="status" th:text="${issue.status}"></td>
-                            <td class="assigned-to">
-                                <span th:if="${issue.assignedTo != null}" th:text="${issue.assignedTo}"></span>
-                                <a th:if="${issue.assignedTo == null}" th:href="@{/issue/{id}(id=${issue.issueId})}">Assign to Me</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+    <div class="container-fluid mt-4">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="card card-container">
+                    <div class="card-body">
+                        <h3>All Issues</h3>
+                        <div class="table-container">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Issue ID</th>
+                                        <th>Title</th>
+                                        <th>Status</th>
+                                        <th>Category</th>
+                                        <th>Reported Date</th>
+                                        <th>Resolved Date</th>
+                                        <th>Resolving Time</th>
+                                        <th>Assigned To</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="issueDTO : ${issues}">
+                                        <td th:text="${issueDTO.issue.issueId}"></td>
+                                        <td th:text="${issueDTO.issue.title}"></td>
+                                        <td th:text="${issueDTO.issue.state}"></td>
+                                        <td th:text="${issueDTO.issue.category}"></td>
+                                        <td th:text="${#dates.format(issueDTO.issue.dateReported, 'yyyy-MM-dd')}"></td>
+                                        <td th:text="${issueDTO.issue.state == 'resolved' ? #dates.format(issueDTO.issue.dateResolved, 'yyyy-MM-dd') : ''}"></td>
+                                        <td th:text="${issueDTO.resolvingTime != null ? issueDTO.resolvingTime : ''}"></td>
+                                        <td>
+                                            <span th:if="${issueDTO.issue.assignedToFullName != null}" th:text="${issueDTO.issue.assignedToFullName}"></span>
+                                            <a th:if="${issueDTO.issue.assignedToFullName == null}" th:href="@{/manager-assign-staff/{id}(id=${issueDTO.issue.issueId})}" class="btn btn-primary">Assign Staff</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

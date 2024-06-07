@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>System Statistics - IT Issue Reporting Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800&display=swap" rel="stylesheet">
+    <link href="/css/dashboards.css" rel="stylesheet">
+    <style>
+        .statistic-container {
+            margin: 20px 0;
+        }
+        .chart-container {
+            width: 100%;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <div class="titles-container">
+            <div class="main-title">IT SERVICE PORTAL</div>
+            <div class="subtitle">System Statistics</div>
+        </div>
+        <div class="navigation-panel">
+            <a href="/manager-dashboard" class="nav-link">Home</a>
+            <a href="/view-statistic" class="nav-link active">View Statistic</a>
+            <a href="/knowledge-articles" class="nav-link">Knowledge Articles</a>
+        </div>
+    </div>
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="statistic-container">
+                    <h4>Number of issues in each category</h4>
+                    <div class="chart-container">
+                        <canvas id="issuesCategoryChart"></canvas>
+                    </div>
+                    <hr>
+                </div>
+                <div class="statistic-container">
+                    <h4>Number of issues in each status</h4>
+                    <div class="chart-container">
+                        <canvas id="issuesStatusChart"></canvas>
+                    </div>
+                    <hr>
+                </div>
+                <div class="statistic-container">
+                    <h4>Number of issues that each IT staff is working on</h4>
+                    <div class="chart-container">
+                        <canvas id="issuesStaffChart"></canvas>
+                    </div>
+                    <hr>
+                </div>
+                <div class="statistic-container">
+                    <h4>Average time for an issue to get resolved in the last 30 days (days)</h4>
+                    <div class="chart-container">
+                        <canvas id="averageResolutionTimeChart"></canvas>
+                    </div>
+                    <hr>
+                </div>
+                <div class="statistic-container">
+                    <h4>Top 5 longest unresolved issues</h4>
+                    <ul>
+                        <li th:each="issue : ${top5LongestUnresolvedIssues}">
+                            <span th:text="${issue.issueId} + ': ' + ${issue.title} + ' (Reported: ' + ${#dates.format(issue.dateReported, 'yyyy-MM-dd')} + ')'"></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script th:inline="javascript">
+        // Data for the charts
+        const issuesCategoryData = /*[[${issuesPerCategory}]]*/ {};
+        const issuesStatusData = /*[[${issuesPerStatus}]]*/ {};
+        const issuesStaffData = /*[[${issuesPerStaff}]]*/ {};
+        const averageResolutionTimeData = /*[[${averageResolutionTime}]]*/ 0;
+
+        // Convert data to arrays for Chart.js
+        function convertDataToArray(data) {
+            const labels = Object.keys(data);
+            const values = Object.values(data);
+            return { labels, values };
+        }
+
+        // Issues by Category
+        const issuesCategoryCtx = document.getElementById('issuesCategoryChart').getContext('2d');
+        const issuesCategory = convertDataToArray(issuesCategoryData);
+        new Chart(issuesCategoryCtx, {
+            type: 'bar',
+            data: {
+                labels: issuesCategory.labels,
+                datasets: [{
+                    label: 'Number of Issues by Category',
+                    data: issuesCategory.values,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Issues by Status
+        const issuesStatusCtx = document.getElementById('issuesStatusChart').getContext('2d');
+        const issuesStatus = convertDataToArray(issuesStatusData);
+        new Chart(issuesStatusCtx, {
+            type: 'bar',
+            data: {
+                labels: issuesStatus.labels,
+                datasets: [{
+                    label: 'Number of Issues per Status',
+                    data: issuesStatus.values,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Issues by Staff
+        const issuesStaffCtx = document.getElementById('issuesStaffChart').getContext('2d');
+        const issuesStaff = convertDataToArray(issuesStaffData);
+        new Chart(issuesStaffCtx, {
+            type: 'bar',
+            data: {
+                labels: issuesStaff.labels,
+                datasets: [{
+                    label: 'Number of Issues per Staff',
+                    data: issuesStaff.values,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Average Resolution Time
+        const averageResolutionTimeCtx = document.getElementById('averageResolutionTimeChart').getContext('2d');
+        new Chart(averageResolutionTimeCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Average Resolution Time'],
+                datasets: [{
+                    label: 'Average Resolution Time (days)',
+                    data: [averageResolutionTimeData],
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

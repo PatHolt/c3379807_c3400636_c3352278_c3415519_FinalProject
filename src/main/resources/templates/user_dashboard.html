@@ -23,30 +23,40 @@
             <a href="/knowledge-articles" class="nav-link">Knowledge Articles</a>
         </div>
     </div>
-    <div class="container">
-        <div class="card mt-4">
-            <div class="card-body p-4">
-                <h3>My Reported Issues</h3>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th class="issue-id">Issue ID</th>
-                            <th class="title">Title</th>
-                            <th class="category">Category</th>
-                            <th class="status">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="issue : ${issues}">
-                            <td th:text="${issue.issueId}"></td>
-                            <td class="title">
-                                <a th:href="@{/issue/{id}(id=${issue.issueId})}" th:text="${issue.title}"></a>
-                            </td>
-                            <td class="category" th:text="${issue.category}"></td>
-                            <td class="status" th:text="${issue.status}"></td>
-                        </tr>
-                    </tbody>
-                </table>
+    <div class="container-fluid mt-4">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="card card-container">
+                    <div class="card-body">
+                        <h3>Reported Issues</h3>
+                        <div class="table-container">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Issue ID</th>
+                                        <th>Title</th>
+                                        <th>Status</th>
+                                        <th>Category</th>
+                                        <th>Reported Date</th>
+                                        <th>Resolving Time</th>
+                                        <th>Assigned To</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="issueDTO : ${issues}">
+                                        <td th:text="${issueDTO.issue.issueId}"></td>
+                                        <td th:text="${issueDTO.issue.title}"></td>
+                                        <td th:text="${issueDTO.issue.state}"></td>
+                                        <td th:text="${issueDTO.issue.category}"></td>
+                                        <td th:text="${#dates.format(issueDTO.issue.dateReported, 'yyyy-MM-dd')}"></td>
+                                        <td th:text="${issueDTO.resolvingTime != null ? issueDTO.resolvingTime : ''}"></td>
+                                        <td th:text="${issueDTO.issue.assignedToFullName}"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
