@@ -63,10 +63,13 @@ CREATE TABLE Issue (
     date_resolved DATETIME,
     reported_by_id INT,
     assigned_to_id INT,
+	kb_reference INT,  
+	anonymity BIT DEFAULT 0,  
     FOREIGN KEY (category_id) REFERENCES Issue_Category(category_id),
     FOREIGN KEY (state_id) REFERENCES Issue_State(state_id),
     FOREIGN KEY (reported_by_id) REFERENCES [User](user_id),
-    FOREIGN KEY (assigned_to_id) REFERENCES [User](user_id)
+    FOREIGN KEY (assigned_to_id) REFERENCES [User](user_id),
+	FOREIGN KEY (kb_reference) REFERENCES Knowledge_Base(kb_id)
 );
 GO
 
