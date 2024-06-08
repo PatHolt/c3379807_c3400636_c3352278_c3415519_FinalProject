@@ -29,8 +29,7 @@
             <div class="subtitle">Knowledge Articles</div>
         </div>
         <div class="navigation-panel">
-            <a href="/manager-dashboard" class="nav-link">Home</a>
-            <a href="/view-statistic" class="nav-link">View Statistic</a>
+            <a th:href="@{${role == 'user' ? '/user-dashboard' : (role == 'staff' ? '/staff-dashboard' : '/manager-dashboard')}}" class="nav-link">Home</a>
             <a href="/knowledge-articles" class="nav-link active">Knowledge Articles</a>
         </div>
     </div>
@@ -43,35 +42,23 @@
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
                         <li th:each="entry : ${articlesByCategory}">
-                            <a class="dropdown-item" th:href="@{/knowledge-articles(category=${entry.key})}" th:text="${entry.key}"></a>
+                            <a class="dropdown-item" th:href="@{/knowledge-articles(category=${entry.key}, role=${role})}" th:text="${entry.key}"></a>
                         </li>
                     </ul>
                 </div>
 
                 <div th:if="${selectedCategory != null}">
                     <h3 th:text="${selectedCategory}"></h3>
-                    <div th:each="article : ${filteredArticles}" class="article-container">
-                        <h4 th:text="${article.title}"></h4>
-                        <p><strong>Issue:</strong> <span th:text="${article.title}"></span></p>
-                        <p><strong>Description:</strong> <span th:text="${article.description}"></span></p>
-                        <p><strong>Resolution Details:</strong> <span th:text="${article.resolutionDetails}"></span></p>
-                        <p class="resolved-date"><strong>Resolved Date:</strong> <span th:text="${#dates.format(article.dateResolved, 'yyyy-MM-dd HH:mm:ss')}"></span></p>
-                        <hr>
-                    </div>
                 </div>
 
-                <div th:if="${selectedCategory == null}">
-                    <div th:each="entry : ${articlesByCategory}">
-                        <h3 th:text="${entry.key}"></h3>
-                        <div th:each="article : ${entry.value}" class="article-container">
-                            <h4 th:text="${article.title}"></h4>
-                            <p><strong>Issue:</strong> <span th:text="${article.title}"></span></p>
-                            <p><strong>Description:</strong> <span th:text="${article.description}"></span></p>
-                            <p><strong>Resolution Details:</strong> <span th:text="${article.resolutionDetails}"></span></p>
-                            <p class="resolved-date"><strong>Resolved Date:</strong> <span th:text="${#dates.format(article.dateResolved, 'yyyy-MM-dd HH:mm:ss')}"></span></p>
-                            <hr>
-                        </div>
-                    </div>
+                <div th:each="article : ${filteredArticles}" class="article-container">
+                    <h4 th:text="${article.articleTitle}"></h4>
+                    <p><strong>Issue:</strong> <span th:text="${article.issueTitle}"></span></p>
+                    <p><strong>Description:</strong> <span th:text="${article.issueDescription}"></span></p>
+                    <p><strong>Resolution Details:</strong> <span th:text="${article.resolutionDetails}"></span></p>
+                    <p class="resolved-date"><strong>Resolved Date:</strong> <span th:text="${#dates.format(article.dateResolved, 'yyyy-MM-dd HH:mm:ss')}"></span></p>
+                    <a th:href="@{/knowledge-article/{id}(id=${article.knowledgeBaseId}, role=${role})}" class="btn btn-primary">Add Comment</a>
+                    <hr>
                 </div>
             </div>
         </div>

@@ -42,6 +42,20 @@
                 <div class="card card-container">
                     <div class="card-body">
                         <h3>Issues Assigned to Me</h3>
+                        <form class="row g-3 mb-4" method="get" action="/staff-dashboard">
+                            <div class="col-auto">
+                                <label for="startDate" class="form-label">Start Date</label>
+                                <input type="date" class="form-control" id="startDate" name="startDate">
+                            </div>
+                            <div class="col-auto">
+                                <label for="endDate" class="form-label">End Date</label>
+                                <input type="date" class="form-control" id="endDate" name="endDate">
+                            </div>
+                            <div class="col-auto">
+                                <label class="form-label">&nbsp;</label>
+                                <button type="submit" class="btn btn-primary d-block">Filter</button>
+                            </div>
+                        </form>
                         <div class="table-container">
                             <table class="table table-striped">
                                 <thead>
@@ -57,7 +71,7 @@
                                 <tbody>
                                     <tr th:each="issueDTO : ${issues}">
                                         <td th:text="${issueDTO.issue.issueId}"></td>
-                                        <td th:text="${issueDTO.issue.title}"></td>
+                                        <td><a th:href="@{/staff-view-issue/{id}(id=${issueDTO.issue.issueId})}" th:text="${issueDTO.issue.title}"></a></td>
                                         <td th:text="${issueDTO.issue.state}"></td>
                                         <td th:text="${issueDTO.issue.category}"></td>
                                         <td th:text="${#dates.format(issueDTO.issue.dateReported, 'yyyy-MM-dd')}"></td>
