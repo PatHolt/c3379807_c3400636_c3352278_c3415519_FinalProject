@@ -156,6 +156,7 @@ CREATE VIEW VW_Issue AS (
 		  ,IDTL.reported_by_id                          AS reportedById
 		  ,CONCAT(URPT.first_name, ' ', URPT.last_name) AS reportedByFullName
 		  ,IDTL.assigned_to_id                          AS assignedToId
+		  ,IDTL.kb_reference                            AS kbReference
 		  ,CONCAT(UASS.first_name, ' ', UASS.last_name) AS assignedToFullName
 	FROM dbo.Issue IDTL
 	    -- Category Description
