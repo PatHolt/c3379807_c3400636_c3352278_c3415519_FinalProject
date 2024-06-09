@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Knowledge Articles - IT Issue Reporting Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800&display=swap" rel="stylesheet">
+    <link href="/css/dashboards.css" rel="stylesheet">
+    <style>
+        .article-container {
+            margin: 20px 0;
+        }
+        .article-container h4 {
+            margin-bottom: 10px;
+        }
+        .article-container p {
+            margin: 5px 0;
+        }
+        .article-container .resolved-date {
+            font-size: 0.9em;
+            color: gray;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <div class="titles-container">
+            <div class="main-title">IT SERVICE PORTAL</div>
+            <div class="subtitle">Knowledge Articles</div>
+        </div>
+        <div class="navigation-panel">
+            <a th:href="@{${role == 'user' ? '/user-dashboard' : (role == 'staff' ? '/staff-dashboard' : '/manager-dashboard')}}" class="nav-link">Home</a>
+            <a href="/knowledge-articles" class="nav-link active">Knowledge Articles</a>
+        </div>
+    </div>
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="dropdown mb-3">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        Choose Category
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
+                        <li th:each="entry : ${articlesByCategory}">
+                            <a class="dropdown-item" th:href="@{/knowledge-articles(category=${entry.key}, role=${role})}" th:text="${entry.key}"></a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div th:if="${selectedCategory != null}">
+                    <h3 th:text="${selectedCategory}"></h3>
+                </div>
+
+                <div th:each="article : ${filteredArticles}" class="article-container">
+                    <h4 th:text="${article.articleTitle}"></h4>
+                    <p><strong>Issue:</strong> <span th:text="${article.issueTitle}"></span></p>
+                    <p><strong>Description:</strong> <span th:text="${article.issueDescription}"></span></p>
+                    <p><strong>Resolution Details:</strong> <span th:text="${article.resolutionDetails}"></span></p>
+                    <p class="resolved-date"><strong>Resolved Date:</strong> <span th:text="${#dates.format(article.dateResolved, 'yyyy-MM-dd HH:mm:ss')}"></span></p>
+                    <a th:href="@{/knowledge-article/{id}(id=${article.knowledgeBaseId}, role=${role})}" class="btn btn-primary">Add Comment</a>
+                    <hr>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

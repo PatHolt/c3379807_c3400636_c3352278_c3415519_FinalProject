@@ -52,4 +52,57 @@ public record Keyword
             connection.close();
         }
     }
+
+    /**
+     * Inserts a keyword in the database.
+     *
+     * @param _keyword The keyword to be inserted.
+     * @throws SQLException if there is an error in executing the SQL query.
+     */
+    public static void insertKeyword(Keyword _keyword) throws SQLException
+    {
+        var connection = ConfigBean.getConnection();
+
+        try
+        {
+            var query = connection.prepareStatement(
+                    """
+                    INSERT INTO [Keyword] (keyword_name) VALUES (?);
+                    """
+            );
+            query.setString(1, _keyword.keyword());
+            query.executeUpdate();
+        }
+        finally
+        {
+            connection.close();
+        }
+    }
+
+    /**
+     * Updates a keyword in the database.
+     *
+     * @param _keyword The keyword to be updated.
+     * @throws SQLException if there is an error in executing the SQL query.
+     */
+    public static void updateKeyword(Keyword _keyword) throws SQLException
+    {
+        var connection = ConfigBean.getConnection();
+
+        try
+        {
+            var query = connection.prepareStatement(
+                    """
+                    UPDATE [Keyword] SET keyword_name = ? WHERE keyword_id = ?;
+                    """
+            );
+            query.setString(1, _keyword.keyword());
+            query.setInt(2, _keyword.keywordId());
+            query.executeUpdate();
+        }
+        finally
+        {
+            connection.close();
+        }
+    }
 }

@@ -52,4 +52,57 @@ public record State
             connection.close();
         }
     }
+
+    /**
+     * Inserts a state in the database.
+     *
+     * @param _state The state to be inserted.
+     * @throws SQLException if there is an error in executing the SQL query.
+     */
+    public static void insertState(State _state) throws SQLException
+    {
+        var connection = ConfigBean.getConnection();
+
+        try
+        {
+            var query = connection.prepareStatement(
+                    """
+                    INSERT INTO [Issue_State] (state_name) VALUES (?);
+                    """
+            );
+            query.setString(1, _state.state());
+            query.executeUpdate();
+        }
+        finally
+        {
+            connection.close();
+        }
+    }
+
+    /**
+     * Updates a state in the database.
+     *
+     * @param _state The state to be updated.
+     * @throws SQLException if there is an error in executing the SQL query.
+     */
+    public static void updateState(State _state) throws SQLException
+    {
+        var connection = ConfigBean.getConnection();
+
+        try
+        {
+            var query = connection.prepareStatement(
+                    """
+                    UPDATE [Issue_State] SET state_name = ? WHERE state_id = ?;
+                    """
+            );
+            query.setString(1, _state.state());
+            query.setInt(2, _state.stateId());
+            query.executeUpdate();
+        }
+        finally
+        {
+            connection.close();
+        }
+    }
 }

@@ -1,0 +1,86 @@
+/* src/main/resources/static/css/dashboards.css */
+
+h3 {
+    font-size: 20px;
+}
+
+body {
+    font-family: 'Barlow';
+    background-color: #f8f9fa;
+}
+.main-title {
+    font-size: 30px;
+    font-weight: 500;
+    color: white;
+}
+.subtitle {
+    font-size: 18px;
+    font-weight: 400;
+    color: white;
+}
+.navigation-panel {
+    display: flex;
+    justify-content: flex-end;
+}
+.header-container {
+    background-color: #313638;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    width: 100%;
+}
+.titles-container {
+    display: flex;
+    flex-direction: column;
+}
+.all-issues, .assigned-issues, .reported-issues {
+    margin-top: 20px;
+}
+.all-issues th, .all-issues td,
+.assigned-issues th, .assigned-issues td,
+.reported-issues th, .reported-issues td {
+    text-align: center;
+    font-weight: 500;
+}
+.nav-link {
+    color: #A1C6EA;
+    margin: 0 10px;
+    padding: 5px 10px;
+    text-decoration: none;
+    background-color: transparent;
+    border: none;
+    font-size: 16px;
+    transition: transform 0.2s, color 0.2s, font-weight 0.2s;
+}
+.nav-link:hover {
+    transform: scale(1.1);
+    color: #F7F7FF;
+    font-weight: 600;
+}
+.active {
+    color: #F7F7FF;
+    font-weight: 600;
+}
+.active:hover {
+    transform: none;
+    color: #F7F7FF;
+    font-weight: 600;
+}
+.btn-primary {
+    background-color: #313638;
+    border-color: #313638;
+}
+
+.btn-primary:hover {
+    background-color: black;
+    border-color: black;
+}
+.btn-info {
+    background-color: #0288D1;
+    color: white;
+}
+.btn-secondary {
+    background-color: grey;
+    border-color: grey;
+}

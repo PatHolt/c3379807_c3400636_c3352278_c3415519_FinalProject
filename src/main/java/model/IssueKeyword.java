@@ -62,4 +62,59 @@ public record IssueKeyword
             connection.close();
         }
     }
+
+    /**
+     * Inserts an issue keyword in the database.
+     *
+     * @param _issueKeyword The issue keyword to be inserted.
+     * @throws SQLException if there is an error in executing the SQL query.
+     */
+    public static void insertIssueKeyword(IssueKeyword _issueKeyword) throws SQLException
+    {
+        var connection = ConfigBean.getConnection();
+
+        try
+        {
+            var query = connection.prepareStatement(
+                    """
+                    INSERT INTO [Issue_Keyword] (issue_id, keyword_id) VALUES (?,?);
+                    """
+            );
+            query.setInt(1, _issueKeyword.issueId());
+            query.setInt(2, _issueKeyword.keywordId());
+            query.executeUpdate();
+        }
+        finally
+        {
+            connection.close();
+        }
+    }
+
+    /**
+     * Updates an issue keyword in the database.
+     *
+     * @param _issueKeyword The issue keyword to be updated.
+     * @throws SQLException if there is an error in executing the SQL query.
+     */
+    public static void updateIssueKeyword(IssueKeyword _issueKeyword) throws SQLException
+    {
+        var connection = ConfigBean.getConnection();
+
+        try
+        {
+            var query = connection.prepareStatement(
+                    """
+                    UPDATE [Issue_Keyword] SET issue_id = ?, keyword_id = ? WHERE issue_keyword_id = ?;
+                    """
+            );
+            query.setInt(1, _issueKeyword.issueId());
+            query.setInt(2, _issueKeyword.keywordId());
+            query.setInt(2, _issueKeyword.issueKeywordId());
+            query.executeUpdate();
+        }
+        finally
+        {
+            connection.close();
+        }
+    }
 }

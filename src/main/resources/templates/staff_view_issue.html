@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Issue Details - IT Issue Reporting Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800&display=swap" rel="stylesheet">
+    <link href="/css/dashboards.css" rel="stylesheet">
+    <style>
+        .chat-box {
+            max-height: 300px;
+            overflow-y: scroll;
+        }
+        .chat-box .message {
+            margin-bottom: 10px;
+        }
+        .chat-box .message .staff {
+            color: blue;
+        }
+        .chat-box .message .user {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <div class="titles-container">
+            <div class="main-title">IT SERVICE PORTAL</div>
+        </div>
+        <div class="navigation-panel">
+            <a href="/staff-dashboard" class="nav-link">Home</a>
+            <a href="/all-issue" class="nav-link">All Issues</a>
+            <a href="/knowledge-articles" class="nav-link">Knowledge Articles</a>
+        </div>
+    </div>
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-body">
+                <h3>Issue Details</h3>
+                <hr>
+                <p><strong>Issue ID:</strong> <span th:text="${issue.issueId}"></span></p>
+                <p><strong>Title:</strong> <span th:text="${issue.title}"></span></p>
+                <p><strong>Status:</strong> <span th:text="${issue.state}"></span></p>
+                <p><strong>Category:</strong> <span th:text="${issue.category}"></span></p>
+                <p><strong>Description:</strong> <span th:text="${issue.description}"></span></p>
+                <p><strong>Assigned To:</strong> <span th:text="${issue.assignedToFullName}"></span></p>
+                <p><strong>Reported By:</strong> <span th:text="${issue.reportedByFullName}"></span></p>
+                <p><strong>Reported Date:</strong> <span th:text="${#dates.format(issue.dateReported, 'yyyy-MM-dd')}"></span></p>
+                <hr>
+                <h4>Comments</h4>
+                <div class="chat-box">
+                    <!-- Mock comments for demonstration -->
+                    <div class="message user">MOCK: User: Can you update me on the issue status?</div>
+                    <div class="message staff">MOCK: Staff: We are currently working on it.</div>
+                </div>
+                <form th:action="@{/staff-view-issue/{id}/comment(id=${issue.issueId})}" method="post">
+                    <div class="mb-3">
+                        <label for="comment" class="form-label">Add Comment</label>
+                        <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Post Comment</button>
+                </form>
+                <hr>
+                <h4>Resolution Details</h4>
+                <form th:action="@{/staff-view-issue/{id}/resolve(id=${issue.issueId})}" method="post">
+                    <div class="mb-3">
+                        <label for="resolution" class="form-label">Resolution</label>
+                        <textarea class="form-control" id="resolution" name="resolution" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success">Save Resolution</button>
+                </form>
+                <hr>
+                <h4>Update Issue State</h4>
+                <form th:action="@{/staff-view-issue/{id}/update-state(id=${issue.issueId})}" method="post">
+                    <div class="mb-3">
+                        <label for="state" class="form-label">State</label>
+                        <select class="form-control" id="state" name="state">
+                            <option value="In Progress" th:selected="${issue.state == 'In Progress'}">In Progress</option>
+                            <option value="Waiting on Third Party" th:selected="${issue.state == 'Waiting on Third Party'}">Waiting on Third Party</option>
+                            <option value="Waiting on Reporter" th:selected="${issue.state == 'Waiting on Reporter'}">Waiting on Reporter</option>
+                            <option value="Completed" th:selected="${issue.state == 'Completed'}">Completed</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-secondary">Update State</button>
+                </form>
+                <hr>
+                <form th:action="@{/staff-view-issue/{id}/finalize(id=${issue.issueId})}" method="post">
+                    <button type="submit" class="btn btn-danger">Finalize Issue</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+<!--
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Issue Details - IT Issue Reporting Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800&display=swap" rel="stylesheet">
+    <link href="/css/dashboards.css" rel="stylesheet">
+    <style>
+        .chat-box {
+            max-height: 300px;
+            overflow-y: scroll;
+        }
+        .chat-box .message {
+            margin-bottom: 10px;
+        }
+        .chat-box .message .staff {
+            color: blue;
+        }
+        .chat-box .message .user {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <div class="titles-container">
+            <div class="main-title">IT SERVICE PORTAL</div>
+        </div>
+        <div class="navigation-panel">
+            <a href="/staff-dashboard" class="nav-link">Home</a>
+            <a href="/all-issue" class="nav-link">All Issues</a>
+            <a href="/knowledge-articles" class="nav-link">Knowledge Articles</a>
+        </div>
+    </div>
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-body">
+                <h3>Issue Details</h3>
+                <hr>
+                <p><strong>Issue ID:</strong> <span th:text="${issue.issueId}"></span></p>
+                <p><strong>Title:</strong> <span th:text="${issue.title}"></span></p>
+                <p><strong>Status:</strong> <span th:text="${issue.state}"></span></p>
+                <p><strong>Category:</strong> <span th:text="${issue.category}"></span></p>
+                <p><strong>Description:</strong> <span th:text="${issue.description}"></span></p>
+                <p><strong>Assigned To:</strong> <span th:text="${issue.assignedToFullName}"></span></p>
+                <p><strong>Reported By:</strong> <span th:text="${issue.reportedByFullName}"></span></p>
+                <p><strong>Reported Date:</strong> <span th:text="${#dates.format(issue.dateReported, 'yyyy-MM-dd')}"></span></p>
+                <hr>
+                <h4>Comments</h4>
+                <div class="chat-box">
+                
+                    <div class="message user">MOCK: User: Can you update me on the issue status?</div>
+                    <div class="message staff">MOCK: Staff: We are currently working on it.</div>
+                </div>
+
+                <div th:if="${currentUser == issue.assignedToFullName}">
+                    <form th:action="@{/staff-view-issue/{id}/comment(id=${issue.issueId})}" method="post">
+                        <div class="mb-3">
+                            <label for="comment" class="form-label">Add Comment</label>
+                            <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Post Comment</button>
+                    </form>
+                    <hr>
+                    <h4>Resolution Details</h4>
+                    <form th:action="@{/staff-view-issue/{id}/resolve(id=${issue.issueId})}" method="post">
+                        <div class="mb-3">
+                            <label for="resolution" class="form-label">Resolution</label>
+                            <textarea class="form-control" id="resolution" name="resolution" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success">Save Resolution</button>
+                    </form>
+                    <hr>
+                    <h4>Update Issue State</h4>
+                    <form th:action="@{/staff-view-issue/{id}/update-state(id=${issue.issueId})}" method="post">
+                        <div class="mb-3">
+                            <label for="state" class="form-label">State</label>
+                            <select class="form-control" id="state" name="state">
+                                <option value="In Progress" th:selected="${issue.state == 'In Progress'}">In Progress</option>
+                                <option value="Waiting on Third Party" th:selected="${issue.state == 'Waiting on Third Party'}">Waiting on Third Party</option>
+                                <option value="Waiting on Reporter" th:selected="${issue.state == 'Waiting on Reporter'}">Waiting on Reporter</option>
+                                <option value="Completed" th:selected="${issue.state == 'Completed'}">Completed</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-secondary">Update State</button>
+                    </form>
+                    <hr>
+                    <form th:action="@{/staff-view-issue/{id}/finalize(id=${issue.issueId})}" method="post">
+                        <button type="submit" class="btn btn-danger">Finalize Issue</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+-->

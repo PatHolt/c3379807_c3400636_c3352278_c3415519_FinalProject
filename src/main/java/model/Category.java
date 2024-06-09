@@ -29,7 +29,7 @@ public record Category
 
             var query = """
                     SELECT *
-                    FROM [Category]
+                    FROM [Issue_Category]
                     """;
 
             var resultSet = statement.executeQuery(query);
@@ -46,6 +46,59 @@ public record Category
             }
 
             return categories;
+        }
+        finally
+        {
+            connection.close();
+        }
+    }
+
+    /**
+     * Inserts a category in the database.
+     *
+     * @param _category The category to be inserted.
+     * @throws SQLException if there is an error in executing the SQL query.
+     */
+    public static void insertCategory(Category _category) throws SQLException
+    {
+        var connection = ConfigBean.getConnection();
+
+        try
+        {
+            var query = connection.prepareStatement(
+                    """
+                    INSERT INTO [Issue_Category] (category_name) VALUES (?);
+                    """
+            );
+            query.setString(1, _category.category());
+            query.executeUpdate();
+        }
+        finally
+        {
+            connection.close();
+        }
+    }
+
+    /**
+     * Updates a category in the database.
+     *
+     * @param _category The category to be updated.
+     * @throws SQLException if there is an error in executing the SQL query.
+     */
+    public static void updateCategory(Category _category) throws SQLException
+    {
+        var connection = ConfigBean.getConnection();
+
+        try
+        {
+            var query = connection.prepareStatement(
+                    """
+                    UPDATE [Issue_Category] SET category_name = ? WHERE category_id = ?;
+                    """
+            );
+            query.setString(1, _category.category());
+            query.setInt(2, _category.categoryId());
+            query.executeUpdate();
         }
         finally
         {
