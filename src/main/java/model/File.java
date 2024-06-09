@@ -31,7 +31,7 @@ public record File
 
             var query = """
                     SELECT *
-                    FROM [File]
+                    FROM [File];
                     """;
 
             var resultSet = statement.executeQuery(query);
@@ -162,8 +162,8 @@ public record File
                     """
             );
             query.setInt(1, _file.issueId());
-            query.setString(1, _file.fileName());
-            query.setString(1, _file.filePath());
+            query.setString(2, _file.fileName());
+            query.setString(3, _file.filePath());
             query.executeUpdate();
         }
         finally
@@ -189,9 +189,9 @@ public record File
                     UPDATE [File] SET issue_id = ?, file_name = ?, file_path = ? WHERE file_id = ?;
                     """
             );
-            query.setInt(4, _file.issueId());
-            query.setString(1, _file.fileName());
-            query.setString(1, _file.filePath());
+            query.setInt(1, _file.issueId());
+            query.setString(2, _file.fileName());
+            query.setString(3, _file.filePath());
             query.setInt(4, _file.fileId());
             query.executeUpdate();
         }
