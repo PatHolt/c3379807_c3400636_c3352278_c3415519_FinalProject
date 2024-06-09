@@ -23,8 +23,9 @@ public record Issue
      int reportedById,
      String reportedByFullName,
      int assignedToId,
-     String assignedToFullName
-
+     String assignedToFullName,
+     int knowledgeBaseId,
+     boolean anonymity
 )
 {
     /**
@@ -66,8 +67,10 @@ public record Issue
                 String reportedByFullName = resultSet.getString("reportedByFullName");
                 int assignedToId = resultSet.getInt("assignedToId");
                 String assignedToFullName = resultSet.getString("assignedToFullName");
+                int knowledgeBaseId = resultSet.getInt("kbReference");
+                boolean anonymity = resultSet.getBoolean("anonymity");
 
-                Issue issue = new Issue(issueId, title, description, resolutionDetails, categoryId, category, stateId, state, dateReported, dateResolved, reportedById, reportedByFullName, assignedToId, assignedToFullName);
+                Issue issue = new Issue(issueId, title, description, resolutionDetails, categoryId, category, stateId, state, dateReported, dateResolved, reportedById, reportedByFullName, assignedToId, assignedToFullName, knowledgeBaseId, anonymity);
                 issues.add(issue);
             }
 
@@ -122,8 +125,10 @@ public record Issue
                 String reportedByFullName = resultSet.getString("reportedByFullName");
                 int assignedToId = resultSet.getInt("assignedToId");
                 String assignedToFullName = resultSet.getString("assignedToFullName");
+                int knowledgeBaseId = resultSet.getInt("kbReference");
+                boolean anonymity = resultSet.getBoolean("anonymity");
 
-                Issue issue = new Issue(issueId, title, description, resolutionDetails, categoryId, category, stateId, state, dateReported, dateResolved, reportedById, reportedByFullName, assignedToId, assignedToFullName);
+                Issue issue = new Issue(issueId, title, description, resolutionDetails, categoryId, category, stateId, state, dateReported, dateResolved, reportedById, reportedByFullName, assignedToId, assignedToFullName, knowledgeBaseId, anonymity);
                 issues.add(issue);
             }
 
@@ -178,8 +183,10 @@ public record Issue
                 String reportedByFullName = resultSet.getString("reportedByFullName");
                 int assignedToId = resultSet.getInt("assignedToId");
                 String assignedToFullName = resultSet.getString("assignedToFullName");
+                int knowledgeBaseId = resultSet.getInt("kbReference");
+                boolean anonymity = resultSet.getBoolean("anonymity");
 
-                Issue issue = new Issue(issueId, title, description, resolutionDetails, categoryId, category, stateId, state, dateReported, dateResolved, reportedById, reportedByFullName, assignedToId, assignedToFullName);
+                Issue issue = new Issue(issueId, title, description, resolutionDetails, categoryId, category, stateId, state, dateReported, dateResolved, reportedById, reportedByFullName, assignedToId, assignedToFullName, knowledgeBaseId, anonymity);
                 issues.add(issue);
             }
 
@@ -235,8 +242,10 @@ public record Issue
                 String reportedByFullName = resultSet.getString("reportedByFullName");
                 int assignedToId = resultSet.getInt("assignedToId");
                 String assignedToFullName = resultSet.getString("assignedToFullName");
+                int knowledgeBaseId = resultSet.getInt("kbReference");
+                boolean anonymity = resultSet.getBoolean("anonymity");
 
-                Issue issue = new Issue(issueId, title, description, resolutionDetails, categoryId, category, stateId, state, dateReported, dateResolved, reportedById, reportedByFullName, assignedToId, assignedToFullName);
+                Issue issue = new Issue(issueId, title, description, resolutionDetails, categoryId, category, stateId, state, dateReported, dateResolved, reportedById, reportedByFullName, assignedToId, assignedToFullName, knowledgeBaseId, anonymity);
                 issues.add(issue);
             }
 
@@ -288,8 +297,10 @@ public record Issue
                 String reportedByFullName = resultSet.getString("reportedByFullName");
                 int assignedToId = resultSet.getInt("assignedToId");
                 String assignedToFullName = resultSet.getString("assignedToFullName");
+                int knowledgeBaseId = resultSet.getInt("kbReference");
+                boolean anonymity = resultSet.getBoolean("anonymity");
 
-                return new Issue(issueId, title, description, resolutionDetails, categoryId, category, stateId, state, dateReported, dateResolved, reportedById, reportedByFullName, assignedToId, assignedToFullName);
+                return new Issue(issueId, title, description, resolutionDetails, categoryId, category, stateId, state, dateReported, dateResolved, reportedById, reportedByFullName, assignedToId, assignedToFullName, knowledgeBaseId, anonymity);
             }
 
             return null;
@@ -312,7 +323,7 @@ public record Issue
         {
             var query = connection.prepareStatement(
                     """
-                    INSERT INTO [Issue] (title, description, resolution_details, category_id, state_id, date_reported, date_resolved, reported_by_id, assigned_to_id) VALUES (?,?,?,?,?,?,?,?,?);
+                    INSERT INTO [Issue] (title, description, resolution_details, category_id, state_id, date_reported, date_resolved, reported_by_id, assigned_to_id, kb_reference, anonymity) VALUES (?,?,?,?,?,?,?,?,?,?,?);
                     """
             );
             query.setString(1, _issue.title());
@@ -324,6 +335,8 @@ public record Issue
             query.setDate(7, (java.sql.Date) _issue.dateResolved());
             query.setInt(8, _issue.reportedById());
             query.setInt(9, _issue.assignedToId());
+            query.setInt(10, _issue.knowledgeBaseId());
+            query.setBoolean(11, _issue.anonymity());
             query.executeUpdate();
         }
         finally
@@ -346,7 +359,7 @@ public record Issue
         {
             var query = connection.prepareStatement(
                     """
-                    UPDATE [Issue] SET title = ?, description = ?, resolution_details = ?, category_id = ?, state_id = ?, date_reported = ?, date_resolved = ?, reported_by_id = ?, assigned_to_id = ? WHERE issue_id = ?;
+                    UPDATE [Issue] SET title = ?, description = ?, resolution_details = ?, category_id = ?, state_id = ?, date_reported = ?, date_resolved = ?, reported_by_id = ?, assigned_to_id = ?, kb_reference = ?, anonymity = ?) WHERE issue_id = ?;
                     """
             );
 
@@ -359,7 +372,9 @@ public record Issue
             query.setDate(7, (java.sql.Date) _issue.dateResolved());
             query.setInt(8, _issue.reportedById());
             query.setInt(9, _issue.assignedToId());
-            query.setInt(9, _issue.issueId());
+            query.setInt(10, _issue.knowledgeBaseId());
+            query.setBoolean(11, _issue.anonymity());
+            query.setInt(12, _issue.issueId());
             query.executeUpdate();
         }
         finally
