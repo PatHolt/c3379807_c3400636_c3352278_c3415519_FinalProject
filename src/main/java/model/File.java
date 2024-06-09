@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Represents a file of issues.
+ * Represents a file.
  */
 public record File
         (
@@ -69,12 +69,14 @@ public record File
 
         try
         {
-            var query = connection.prepareStatement(
-                    """
-                    SELECT *
-                    FROM [File]
-                    WHERE issue_id = ?;
-                    """;
+            var query = connection.prepareStatement
+            (
+                """
+                SELECT *
+                FROM [File]
+                WHERE issue_id = ?;
+                """
+            );
 
             query.setInt(1, _issueId);
 
@@ -156,10 +158,11 @@ public record File
 
         try
         {
-            var query = connection.prepareStatement(
-                    """
-                    INSERT INTO [File] (issue_id, file_name, file_path) VALUES (?,?,?);
-                    """
+            var query = connection.prepareStatement
+            (
+                """
+                INSERT INTO [File] (issue_id, file_name, file_path) VALUES (?,?,?);
+                """
             );
             query.setInt(1, _file.issueId());
             query.setString(2, _file.fileName());
