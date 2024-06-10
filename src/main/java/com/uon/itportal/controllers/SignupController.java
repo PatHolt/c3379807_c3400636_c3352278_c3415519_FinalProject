@@ -1,66 +1,60 @@
-package com.uon.itservicesportal.controller;
+package com.uon.itportal.controllers;
 
-import model.User;
-import model.UserRole;
+import java.sql.SQLException;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import javax.servlet.http.HttpSession;
-import java.sql.SQLException;
-import java.util.List;
+
+import model.User;
 
 @Controller
 public class SignupController {
 
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    private UserService userService;
 
     @GetMapping("/signup")
-    public String showSignupPage(Model model) {
-        try {
-            List<UserRole> roles = UserRole.getAllUserRoles();
-            model.addAttribute("roles", roles);
-        } catch (SQLException e) {
-            model.addAttribute("error", "An error occurred while loading roles");
-        }
+    public String showSignupPage() {
         return "signup";
     }
 
     @PostMapping("/signup")
-    public String signupUser(@RequestParam("firstname") String firstName,
-                             @RequestParam("lastname") String lastName,
-                             @RequestParam("username") String username,
-                             @RequestParam("email") String email,
-                             @RequestParam("contactnumber") int contactNumber,
-                             @RequestParam("password") String password,
-                             @RequestParam("confirmPassword") String confirmPassword,
-                             @RequestParam("roleId") int roleId,
-                             Model model) {
-        if (!password.equals(confirmPassword)) {
-            model.addAttribute("error", "Passwords do not match");
-            return "signup";
-        }
-
+    public String handleSignup(@RequestParam("username") String username,
+                               @RequestParam("password") String password,
+                               @RequestParam("firstName") String firstName,
+                               @RequestParam("lastName") String lastName,
+                               @RequestParam("email") String email,
+                               @RequestParam("contactNumber") int contactNumber,
+                               @RequestParam("role") String role,
+                               Model model) {
         try {
-            User existingUser = User.getUserByUsername(username);
-            if (existingUser != null) {
-                model.addAttribute("error", "Username already exists");
+            if (userService.isUsernameTaken(username)) {
+                model.addAttribute("error", "Username is already taken.");
                 return "signup";
             }
 
-            String encodedPassword = passwordEncoder.encode(password);
-            User newUser = new User(0, username, encodedPassword, firstName, lastName, firstName + " " + lastName, email, contactNumber, roleId, "");
-            User.insertUser(newUser);
-
-            model.addAttribute("message", "User registered successfully");
+            int roleId = getRoleId(role); // Assuming a method to get the role ID based on the role name
+            User newUser = new User(0, username, password, firstName, lastName, firstName + " " + lastName, email, contactNumber, roleId, role);
+            userService.insertUser(newUser);
             return "redirect:/login";
         } catch (SQLException e) {
-            model.addAttribute("error", "An error occurred while signing up");
+            model.addAttribute("error", "An error occurred while processing your request.");
             return "signup";
         }
+    }
+
+    private int getRoleId(String role) {
+        return switch (role) {
+            case "User" -> 1;
+                
+            case "IT Staff" -> 2;
+            case "IT Manager" -> 3;
+            default -> 0;
+                
+        };
     }
 }
