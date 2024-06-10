@@ -3,7 +3,7 @@ package com.uon.itportal.controllers;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,22 +18,22 @@ import model.Issue;
 public class UserDbController {
 
     @GetMapping("/user-dashboard")
-    public String managerDashboard(Model model) {
-        List<Issue> issues = new ArrayList<>();
+    public String userDashboard(Model model) {
+        try {
+            List<Issue> issues = Issue.getUserCreatedIssues(301); // Replace 301 with the current user's ID
 
-        // This is SAMPLE DATA TO TEST VIEWS REMOVE LATER
-        issues.add(new Issue(1, "Issue 1", "Description 1", "Resolution 1", 101, "Category 1", 201, "open", new Date(), null, 301, "Reporter 1", 401, "Assignee 1", 0, false));
-        issues.add(new Issue(2, "Issue 2", "Description 2", "Resolution 2", 102, "Category 2", 202, "resolved", new Date(System.currentTimeMillis() - 86400000 * 7), new Date(System.currentTimeMillis() - 86400000 * 2), 302, "Reporter 2", 402, "Assignee 2", 0, false));
+            // Calculate resolving time for each issue and create a DTO list
+            List<IssueDTO> issueDTOs = issues.stream()
+                .map(issue -> {
+                    Long resolvingTime = calculateResolvingTime(issue.dateReported(), issue.state());
+                    return new IssueDTO(issue, resolvingTime);
+                })
+                .collect(Collectors.toList());
 
-        // Calculate resolving time for each issue and create a DTO list
-        List<IssueDTO> issueDTOs = issues.stream()
-            .map(issue -> {
-                Long resolvingTime = calculateResolvingTime(issue.dateReported(), issue.state());
-                return new IssueDTO(issue, resolvingTime);
-            })
-            .collect(Collectors.toList());
-
-        model.addAttribute("issues", issueDTOs);
+            model.addAttribute("issues", issueDTOs);
+        } catch (Exception e) {
+            model.addAttribute("error", "An error occurred while retrieving the issues.");
+        }
         return "user_dashboard";
     }
 
@@ -47,5 +47,5 @@ public class UserDbController {
     }
 
     // DTO class to hold issue data along with resolving time
-    public record IssueDTO(Issue issue, Long resolvingTime) {}
+    public static record IssueDTO(Issue issue, Long resolvingTime) {}
 }
