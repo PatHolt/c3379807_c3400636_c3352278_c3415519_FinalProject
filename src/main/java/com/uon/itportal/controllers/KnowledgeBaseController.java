@@ -1,7 +1,7 @@
 package com.uon.itportal.controllers;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,37 +19,43 @@ import model.KnowledgeBaseArticle;
 @Controller
 public class KnowledgeBaseController {
 
-    private List<KnowledgeBaseArticle> knowledgeBaseArticles = new ArrayList<>();
     private Map<Integer, List<String>> articleComments = new HashMap<>();
 
     public KnowledgeBaseController() {
-        // Mock data for demonstration
-        knowledgeBaseArticles.add(new KnowledgeBaseArticle(1, 101, "Issue 1", "Description for issue 1", "Article 1", "Description of Article 1", "Resolution for issue 1", new Date()));
-        knowledgeBaseArticles.add(new KnowledgeBaseArticle(2, 102, "Issue 2", "Description for issue 2", "Article 2", "Description of Article 2", "Resolution for issue 2", new Date()));
-
         // Initialize comment lists for each article
-        knowledgeBaseArticles.forEach(article -> articleComments.put(article.knowledgeBaseId(), new ArrayList<>()));
+        try {
+            List<KnowledgeBaseArticle> knowledgeBaseArticles = KnowledgeBaseArticle.getAllKnowledgeBaseArticles();
+            knowledgeBaseArticles.forEach(article -> articleComments.put(article.knowledgeBaseId(), new ArrayList<>()));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @GetMapping("/knowledge-articles")
     public String viewKnowledgeArticles(@RequestParam(value = "category", required = false) String category,
                                         @RequestParam(value = "role", required = false, defaultValue = "user") String role,
                                         Model model) {
-        // Grouping articles by issue category
-        Map<String, List<KnowledgeBaseArticle>> articlesByCategory = knowledgeBaseArticles.stream()
-                .collect(Collectors.groupingBy(KnowledgeBaseArticle::issueTitle));
+        try {
+            List<KnowledgeBaseArticle> knowledgeBaseArticles = KnowledgeBaseArticle.getAllKnowledgeBaseArticles();
+            // Grouping articles by issue category
+            Map<String, List<KnowledgeBaseArticle>> articlesByCategory = knowledgeBaseArticles.stream()
+                    .collect(Collectors.groupingBy(KnowledgeBaseArticle::issueTitle));
 
-        model.addAttribute("articlesByCategory", articlesByCategory);
-        model.addAttribute("selectedCategory", category);
-        model.addAttribute("role", role);
+            model.addAttribute("articlesByCategory", articlesByCategory);
+            model.addAttribute("selectedCategory", category);
+            model.addAttribute("role", role);
 
-        List<KnowledgeBaseArticle> filteredArticles;
-        if (category != null && !category.isEmpty()) {
-            filteredArticles = articlesByCategory.getOrDefault(category, new ArrayList<>());
-        } else {
-            filteredArticles = knowledgeBaseArticles;
+            List<KnowledgeBaseArticle> filteredArticles;
+            if (category != null && !category.isEmpty()) {
+                filteredArticles = articlesByCategory.getOrDefault(category, new ArrayList<>());
+            } else {
+                filteredArticles = knowledgeBaseArticles;
+            }
+            model.addAttribute("filteredArticles", filteredArticles);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "error";
         }
-        model.addAttribute("filteredArticles", filteredArticles);
 
         return "knowledge_articles";
     }
@@ -58,15 +64,22 @@ public class KnowledgeBaseController {
     public String viewKnowledgeArticle(@PathVariable("id") int articleId,
                                        @RequestParam(value = "role", required = false, defaultValue = "user") String role,
                                        Model model) {
-        KnowledgeBaseArticle article = knowledgeBaseArticles.stream()
-                .filter(a -> a.knowledgeBaseId() == articleId)
-                .findFirst()
-                .orElse(null);
+        try {
+            KnowledgeBaseArticle article = KnowledgeBaseArticle.getAllKnowledgeBaseArticles().stream()
+                    .filter(a -> a.knowledgeBaseId() == articleId)
+                    .findFirst()
+                    .orElse(null);
 
-        if (article != null) {
-            model.addAttribute("article", article);
-            model.addAttribute("comments", articleComments.get(articleId));
-            model.addAttribute("role", role);
+            if (article != null) {
+                model.addAttribute("article", article);
+                model.addAttribute("comments", articleComments.get(articleId));
+                model.addAttribute("role", role);
+            } else {
+                return "error"; // Handle the case where the article is not found
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "error";
         }
 
         return "knowledge_article_detail";
