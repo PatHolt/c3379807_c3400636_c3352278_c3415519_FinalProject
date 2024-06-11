@@ -1,6 +1,4 @@
 package com.uon.itportal.controllers;
-import java.sql.SQLException;
-
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +14,7 @@ import model.User;
 public class LoginController {
 
     @Autowired
-    private UserService userService;
+    public UserService userService;
 
     @GetMapping("/login")
     public String showLoginPage() {
@@ -31,30 +29,24 @@ public class LoginController {
             User user = userService.getUserByUsernameAndPassword(username, password);
             if (user != null) {
                 session.setAttribute("user", user);
-                String role = user.role();
-                if (role.equals("User")) {
-                    return "/user_dashboard";
-                } else if (role.equals("IT Staff")) {
-                    return "staff_dashboard";
-                } else if (role.equals("IT Manager")) {
-                    return "manager_dashboard";
-                } else {
-                    model.addAttribute("error", "Unknown role.");
-                    return "login";
+                switch (user.role()) {
+                    case "3":
+                        return "manager_dashboard";
+                    case "2":
+                        return "staff_dashboard";
+                    case "1":
+                        return "user_dashboard";
+                    default:
+                        model.addAttribute("error", "Invalid role");
+                        return "login";
                 }
             } else {
-                model.addAttribute("error", "Invalid username or password.");
+                model.addAttribute("error", "Invalid username or password");
                 return "login";
             }
-        } catch (SQLException e) {
-            model.addAttribute("error", "An error occurred while processing your request.");
+        } catch (Exception e) {
+            model.addAttribute("error", "An error occurred: " + e.getMessage());
             return "login";
         }
-    }
-
-    @GetMapping("/logout")
-    public String handleLogout(HttpSession session) {
-        session.invalidate();
-        return "redirect:/login";
     }
 }
