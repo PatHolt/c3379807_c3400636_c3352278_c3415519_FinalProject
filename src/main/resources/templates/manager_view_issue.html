@@ -49,15 +49,13 @@
                 <hr>
                 <h4>Comments</h4>
                 <div class="chat-box">
-                    <!-- Mock comments for demonstration -->
-                    <div class="message user">MOCK: User: Can you update me on the issue status?</div>
-                    <div class="message staff">MOCK: Staff: We are currently working on it.</div>
+                    <!-- Placeholder for comments -->
                 </div>
-                <hr>
-                <a href="/manager-dashboard" class="btn btn-secondary">Back to Dashboard</a>
-            </div>
-        </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+                <form th:action="@{/manager-view-issue/{id}/comment(id=${issue.issueId})}" method="post">
+                    <div class="mb-3">
+                        <label for="comment" class="form-label">Add Comment</label>
+                        <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Post Comment</button>
+                </form>
+               
